@@ -1,45 +1,43 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class StudentController extends Controller
-
+class TeacherController extends Controller
 {
     public function index()
     {
-        return "Showing student list";
+        return "Showing teacher list";
     }
 
     public function create()
     {
-        return "Showing create student page";
+        return "Showing create teacher page";
     }
 
     public function store()
     {
-        return "Storing new student";
+        return "Storing new teacher";
     }
 
     public function show($id)
     {
-        return "Showing student with ID: $id";
+        return "Showing teacher with ID: $id";
     }
 
     public function edit($id)
     {
-        return "Showing edit student page with ID: $id";
+        return "Showing edit teacher page with ID: $id";
     }
 
     public function update($id)
     {
-        return "Updating student with ID: $id";
+        return "Updating teacher with ID: $id";
     }
 
     public function destroy($id)
     {
-        return "Deleting student with ID: $id";
+        return "Deleting teacher with ID: $id";
     }
 }
