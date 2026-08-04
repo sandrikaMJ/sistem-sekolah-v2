@@ -17,17 +17,26 @@ class StudentController extends Controller
                 'id' => 1,
                 'nis' => '22100001',
                 'name' => 'Andi Lau',
-                'class' => 'XII TKJ 3',
+                'class' => 'XII TKJ 1',
                 'major' => 'TKJ'
             ],
             [
                 'id' => 2,
                 'nis' => '22100002',
                 'name' => 'Budi Santoso',
-                'class' => 'XII AKL 1',
+                'class' => 'XII TKJ 2',
                 'major' => 'AKL'
                 
+            ],
+            [
+                'id' => 3,
+                'nis' => '22100003',
+                'name' => 'Nina Bobo',
+                'class' => 'XII TKJ 3',
+                'major' => 'TKJ'
+                
             ]
+
         ];
 
         return view('students.index', [
