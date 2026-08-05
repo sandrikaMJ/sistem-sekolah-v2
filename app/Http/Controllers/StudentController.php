@@ -1,84 +1,80 @@
 <?php
-
-
+ 
 namespace App\Http\Controllers;
-
+ 
 use Illuminate\Http\Request;
-
+ 
 class StudentController extends Controller
-
+ 
 {
     public function index()
     {
         $title = 'Sistem Sekolah - Daftar Siswa';
-    
+ 
         $student = [
             [
                 'id' => 1,
-                'nis' => '22100001',
-                'name' => 'Andi Lau',
+                'nis' => '1001',
+                'name' => 'Andi',
                 'class' => 'XII TKJ 1',
                 'major' => 'TKJ'
             ],
             [
                 'id' => 2,
-                'nis' => '22100002',
-                'name' => 'Budi Santoso',
+                'nis' => '1002',
+                'name' => 'Budi',
                 'class' => 'XII TKJ 2',
-                'major' => 'AKL'
-                
+                'major' => 'TKJ'
             ],
             [
                 'id' => 3,
-                'nis' => '22100003',
-                'name' => 'Nina Bobo',
+                'nis' => '1003',
+                'name' => 'Nina',
                 'class' => 'XII TKJ 3',
                 'major' => 'TKJ'
-                
-            ]
-
+            ],
         ];
-
+ 
         return view('students.index', [
             'title' => $title,
             'students' => $student
         ]);
     }
-
+ 
     public function create()
-    { $title = 'Catat Siswa Baru - Sistem Sekolah';
+    { $title = 'Sistem Sekolah - Tambah Siswa';
         return view('students.create', [
             'title' => $title
         ]);
     }
-
+ 
     public function store()
     {
-       return view('students.store');
+        return view('students.store');
     }
-
+ 
     public function show($id)
     {
-        $title = 'Lembar siswa - Sistem Sekolah';
+        $title = 'Sistem Sekolah - Detail Siswa';
         return view('students.show', [
             'title' => $title
         ]);
     }
-
     public function edit($id)
     {
-
-        $title = 'Ubah data siswa - sistem sekolah';
+ 
+        $title = 'Sistem Sekolah - Edit Siswa';
+ 
         return view('students.edit', [
             'title' => $title
         ]);
     }
-
+ 
     public function update($id)
     {
         return view('students.update');
     }
-
+ 
     public function destroy($id)
     {
         return view('students.destroy');
