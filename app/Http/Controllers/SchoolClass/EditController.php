@@ -3,12 +3,55 @@
 namespace App\Http\Controllers\SchoolClass;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class EditController extends Controller
 {
     public function __invoke($id)
     {
-        return "Showing edit class page with ID: $id";
+        $title = 'Sistem Sekolah - Edit Kelas';
+
+        $classes = session('classes', []);
+
+        $class = collect($classes)->firstWhere('id', (int) $id);
+
+        if (!$class) {
+            abort(404);
+        }
+
+        $majors = [
+            [
+                'id' => 1,
+                'code' => 'AKL',
+                'name' => 'Akuntansi dan Keuangan Lembaga',
+            ],
+            [
+                'id' => 2,
+                'code' => 'TKJ',
+                'name' => 'Teknik Komputer dan Jaringan',
+            ],
+            [
+                'id' => 3,
+                'code' => 'BD',
+                'name' => 'Bisnis Digital',
+            ],
+        ];
+
+        $teachers = [
+            [
+                'id' => 1,
+                'name' => 'Budi Santoso',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Siti Aminah',
+            ],
+        ];
+
+        return view('classes.edit', [
+            'title' => $title,
+            'class' => $class,
+            'majors' => $majors,
+            'teachers' => $teachers,
+        ]);
     }
 }

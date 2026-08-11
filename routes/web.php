@@ -65,4 +65,5 @@ Route::prefix('classes')->name('classes.')->group(function () {
 
 
 //major
-Route::resource('majors', MajorController::class);
+Route::resource('majors', MajorController::class)
+    ->parameters(['majors' => 'id']);

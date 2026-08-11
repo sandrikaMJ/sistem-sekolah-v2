@@ -5,24 +5,23 @@
 @section('content')
 
 <div class="mb-8 border-b border-[#E5E3DB] pb-5">
-    <a href="{{ route('students.index') }}"
+
+    <a href="{{ route('teachers.index') }}"
         class="text-xs uppercase tracking-[0.15em] text-slate-400 hover:text-[#A16207]">
-        &larr; Buku Induk
+        &larr; Daftar Guru
     </a>
 
     <h1 class="font-display mt-2 text-3xl font-semibold text-[#16213A]">
-        Ubah Data Siswa
+        Ubah Data Guru
     </h1>
 
     <p class="mt-1 text-sm text-slate-500">
-        Memperbarui catatan atas nama
-        <span class="font-medium text-[#16213A]">
-            {{ $student['name'] }}
-        </span>.
+        Memperbarui data guru.
     </p>
+
 </div>
 
-<form action="{{ route('students.update', ['id' => $student['id']]) }}"
+<form action="{{ route('teachers.update', ['id' => $teacher['id']]) }}"
     method="POST"
     class="space-y-6 border border-[#E5E3DB] bg-white p-8">
 
@@ -30,15 +29,15 @@
     @method('PUT')
 
     <div>
-        <label for="nis"
+        <label for="nip"
             class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-[#16213A]">
-            NIS
+            NIP
         </label>
 
         <input type="text"
-            id="nis"
-            name="nis"
-            value="{{ $student['nis'] }}"
+            id="nip"
+            name="nip"
+            value="{{ $teacher['nip'] }}"
             class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm focus:border-[#A16207] focus:bg-white focus:outline-none">
     </div>
 
@@ -51,7 +50,7 @@
         <input type="text"
             id="name"
             name="name"
-            value="{{ $student['name'] }}"
+            value="{{ $teacher['name'] }}"
             class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm focus:border-[#A16207] focus:bg-white focus:outline-none">
     </div>
 
@@ -63,13 +62,13 @@
 
         <select id="gender"
             name="gender"
-            class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm">
+            class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm focus:border-[#A16207] focus:bg-white focus:outline-none">
 
-            <option value="Laki-laki" {{ $student['gender'] == 'Laki-laki' ? 'selected' : '' }}>
+            <option value="Laki-Laki" {{ $teacher['gender'] == 'Laki-Laki' ? 'selected' : '' }}>
                 Laki-laki
             </option>
 
-            <option value="Perempuan" {{ $student['gender'] == 'Perempuan' ? 'selected' : '' }}>
+            <option value="Perempuan" {{ $teacher['gender'] == 'Perempuan' ? 'selected' : '' }}>
                 Perempuan
             </option>
 
@@ -77,46 +76,55 @@
     </div>
 
     <div>
-        <label for="major"
+        <label for="subject"
             class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-[#16213A]">
-            Jurusan
+            Mata Pelajaran
         </label>
 
-        <select id="major"
-            name="major"
-            class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm">
+        <input type="text"
+            id="subject"
+            name="subject"
+            value="{{ $teacher['subject'] }}"
+            class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm focus:border-[#A16207] focus:bg-white focus:outline-none">
+    </div>
 
-            <option value="AKL" {{ $student['major'] == 'AKL' ? 'selected' : '' }}>
-                AKL
+    <div>
+        <label for="phone"
+            class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-[#16213A]">
+            No. Telepon
+        </label>
+
+        <input type="text"
+            id="phone"
+            name="phone"
+            value="{{ $teacher['phone'] }}"
+            class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm focus:border-[#A16207] focus:bg-white focus:outline-none">
+    </div>
+
+    <div>
+        <label for="status"
+            class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-[#16213A]">
+            Status
+        </label>
+
+        <select id="status"
+            name="status"
+            class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm focus:border-[#A16207] focus:bg-white focus:outline-none">
+
+            <option value="Aktif" {{ $teacher['status'] == 'Aktif' ? 'selected' : '' }}>
+                Aktif
             </option>
 
-            <option value="TKJ" {{ $student['major'] == 'TKJ' ? 'selected' : '' }}>
-                TKJ
-            </option>
-
-            <option value="BiD" {{ $student['major'] == 'BiD' ? 'selected' : '' }}>
-                BiD
+            <option value="Tidak Aktif" {{ $teacher['status'] == 'Tidak Aktif' ? 'selected' : '' }}>
+                Tidak Aktif
             </option>
 
         </select>
     </div>
 
-    <div>
-        <label for="class"
-            class="mb-1.5 block text-xs font-semibold uppercase tracking-[0.1em] text-[#16213A]">
-            Kelas
-        </label>
-
-        <input type="text"
-            id="class"
-            name="class"
-            value="{{ $student['class'] }}"
-            class="w-full border border-[#D9D6CD] bg-[#FCFBF8] px-3.5 py-2.5 text-sm">
-    </div>
-
     <div class="flex justify-end gap-4 border-t border-[#EFEDE6] pt-6">
 
-        <a href="{{ route('students.index') }}"
+        <a href="{{ route('teachers.index') }}"
             class="px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-[#16213A]">
             Batal
         </a>

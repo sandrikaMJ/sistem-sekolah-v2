@@ -4,9 +4,9 @@
 
 @section('content')
 
-<a href="{{ route('students.index') }}"
+<a href="{{ route('classes.index') }}"
     class="text-xs uppercase tracking-[0.15em] text-slate-400 hover:text-[#A16207]">
-    &larr; Buku Induk
+    &larr; Daftar Kelas
 </a>
 
 <div class="mt-3 border border-[#E5E3DB] bg-white">
@@ -16,20 +16,20 @@
         <div>
 
             <p class="mb-1 text-[11px] uppercase tracking-[0.2em] text-[#A16207]">
-                Lembar Siswa
+                Lembar Kelas
             </p>
 
             <h1 class="font-display text-3xl font-semibold text-[#16213A]">
-                {{ $student['name'] }}
+                {{ $class['name'] }}
             </h1>
 
             <p class="mt-1 font-mono text-xs text-slate-500">
-                NIS {{ $student['nis'] }}
+                ID {{ $class['id'] }}
             </p>
 
         </div>
 
-        <a href="{{ route('students.edit', ['id' => $student['id']]) }}"
+        <a href="{{ route('classes.edit', ['id' => $class['id']]) }}"
             class="bg-[#16213A] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#26324f]">
             Ubah
         </a>
@@ -39,67 +39,65 @@
     <dl class="divide-y divide-[#EFEDE6] text-sm">
 
         <div class="flex justify-between px-8 py-4">
-            <dt class="uppercase tracking-[0.1em] text-xs text-slate-400">
-                NIS
+
+            <dt class="text-xs uppercase tracking-[0.1em] text-slate-400">
+                Nama Kelas
             </dt>
 
             <dd class="font-medium text-[#16213A]">
-                {{ $student['nis'] }}
+                {{ $class['name'] }}
             </dd>
+
         </div>
 
         <div class="flex justify-between px-8 py-4">
-            <dt class="uppercase tracking-[0.1em] text-xs text-slate-400">
-                Nama Lengkap
+
+            <dt class="text-xs uppercase tracking-[0.1em] text-slate-400">
+                Tingkat
             </dt>
 
             <dd class="font-medium text-[#16213A]">
-                {{ $student['name'] }}
+                {{ $class['grade'] }}
             </dd>
+
         </div>
 
         <div class="flex justify-between px-8 py-4">
-            <dt class="uppercase tracking-[0.1em] text-xs text-slate-400">
-                Jenis Kelamin
-            </dt>
 
-            <dd class="font-medium text-[#16213A]">
-                {{ $student['gender'] }}
-            </dd>
-        </div>
-
-        <div class="flex justify-between px-8 py-4">
-            <dt class="uppercase tracking-[0.1em] text-xs text-slate-400">
+            <dt class="text-xs uppercase tracking-[0.1em] text-slate-400">
                 Jurusan
             </dt>
 
             <dd class="font-medium text-[#16213A]">
-                {{ $student['major'] }}
+                {{ $class['major'] }}
             </dd>
+
         </div>
 
         <div class="flex justify-between px-8 py-4">
-            <dt class="uppercase tracking-[0.1em] text-xs text-slate-400">
-                Kelas
+
+            <dt class="text-xs uppercase tracking-[0.1em] text-slate-400">
+                Wali Kelas
             </dt>
 
             <dd class="font-medium text-[#16213A]">
-                {{ $student['class'] }}
+                {{ $class['homeroom_teacher'] }}
             </dd>
+
         </div>
 
     </dl>
 
     <div class="flex justify-end gap-4 border-t border-[#E5E3DB] px-8 py-5">
 
-        <a href="{{ route('students.index') }}"
+        <a href="{{ route('classes.index') }}"
             class="px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-[#16213A]">
             Kembali
         </a>
 
-        <form action="{{ route('students.destroy', ['id' => $student['id']]) }}"
+        <form action="{{ route('classes.destroy', ['id' => $class['id']]) }}"
             method="POST"
-            onsubmit="return confirm('Hapus data siswa ini dari buku induk?')">
+            onsubmit="return confirm('Hapus data kelas ini?')">
 
             @csrf
             @method('DELETE')
