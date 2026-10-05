@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -10,34 +11,7 @@ class StudentController extends Controller
     {
         $title = 'Sistem Sekolah - Daftar Siswa';
 
-        $students = [
-            [
-                'id' => 1,
-                'nis' => '1001',
-                'name' => 'Andi',
-                'class' => 'XII TKJ 1',
-                'major' => 'TKJ',
-                'gender' => 'Laki-laki',
-            ],
-            [
-                'id' => 2,
-                'nis' => '1002',
-                'name' => 'Budi',
-                'class' => 'XII TKJ 2',
-                'major' => 'TKJ',
-                'gender' => 'Laki-laki',
-            ],
-            [
-                'id' => 3,
-                'nis' => '1003',
-                'name' => 'Nina',
-                'class' => 'XII TKJ 3',
-                'major' => 'TKJ',
-                'gender' => 'Perempuan',
-            ],
-        ];
-
-        $students = array_merge($students, session('students', []));
+        $students = Student::select(['id', 'nis', 'name', 'class', 'major', 'gender'])->get();
 
         return view('students.index', [
             'title' => $title,
@@ -56,56 +30,27 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        $students = session('students', []);
+        // Validasi
+        $validatedData = $request->validate([
+            'nis' => ['required', 'string', 'size:4', 'unique:students,nis'],
+            'name' => ['required', 'string'],
+            'gender' => ['required', 'string', 'in:Laki-laki,Perempuan'],
+            'major' => ['required', 'string', 'in:AKL,TKJ,BID'],
+            'class' => ['required', 'string']
+        ]);
 
-        $students[] = [
-            'id' => count($students) + 4,
-            'nis' => $request->nis,
-            'name' => $request->name,
-            'class' => $request->class,
-            'major' => $request->major,
-            'gender' => $request->gender,
-        ];
-
-        session(['students' => $students]);
+        // Tambahkan Data ke Database
+        Student::create($validatedData);
 
         return redirect()->route('students.index');
     }
 
-    public function show($id)
+    public function show(student $student)
     {
         $title = 'Sistem Sekolah - Detail Siswa';
 
-        $students = [
-            [
-                'id' => 1,
-                'nis' => '1001',
-                'name' => 'Andi',
-                'class' => 'XII TKJ 1',
-                'major' => 'TKJ',
-                'gender' => 'Laki-laki',
-            ],
-            [
-                'id' => 2,
-                'nis' => '1002',
-                'name' => 'Budi',
-                'class' => 'XII TKJ 2',
-                'major' => 'TKJ',
-                'gender' => 'Laki-laki',
-            ],
-            [
-                'id' => 3,
-                'nis' => '1003',
-                'name' => 'Nina',
-                'class' => 'XII TKJ 3',
-                'major' => 'TKJ',
-                'gender' => 'Perempuan',
-            ],
-        ];
-
-        $students = array_merge($students, session('students', []));
-
-        $student = collect($students)->firstWhere('id', (int) $id);
+        // Ambil data dari Database sebagai Object Model
+        
 
         return view('students.show', [
             'title' => $title,
@@ -113,40 +58,12 @@ class StudentController extends Controller
         ]);
     }
 
-    public function edit($id)
+    public function edit(Student $student)
     {
         $title = 'Sistem Sekolah - Edit Siswa';
 
-        $students = [
-            [
-                'id' => 1,
-                'nis' => '1001',
-                'name' => 'Andi',
-                'class' => 'XII TKJ 1',
-                'major' => 'TKJ',
-                'gender' => 'Laki-laki',
-            ],
-            [
-                'id' => 2,
-                'nis' => '1002',
-                'name' => 'Budi',
-                'class' => 'XII TKJ 2',
-                'major' => 'TKJ',
-                'gender' => 'Laki-laki',
-            ],
-            [
-                'id' => 3,
-                'nis' => '1003',
-                'name' => 'Nina',
-                'class' => 'XII TKJ 3',
-                'major' => 'TKJ',
-                'gender' => 'Perempuan',
-            ],
-        ];
-
-        $students = array_merge($students, session('students', []));
-
-        $student = collect($students)->firstWhere('id', (int) $id);
+        // Ambil data dari Database sebagai Object Model
+        $student = Student::findOrFail($student);
 
         return view('students.edit', [
             'title' => $title,
@@ -156,32 +73,25 @@ class StudentController extends Controller
 
     public function update(Request $request, $id)
     {
-        $students = session('students', []);
+        $student = Student::findOrFail($id);
 
-        foreach ($students as &$student) {
-            if ($student['id'] == $id) {
-                $student['nis'] = $request->nis;
-                $student['name'] = $request->name;
-                $student['gender'] = $request->gender;
-                $student['class'] = $request->class;
-                $student['major'] = $request->major;
-            }
-        }
+        $validatedData = $request->validate([
+            'nis' => ['required', 'string', 'size:4', 'unique:students,nis,' . $id],
+            'name' => ['required', 'string'],
+            'gender' => ['required', 'string', 'in:Laki-laki,Perempuan'],
+            'major' => ['required', 'string', 'in:AKL,TKJ,BID'],
+            'class' => ['required', 'string']
+        ]);
 
-        session(['students' => $students]);
+        $student->update($validatedData);
 
         return redirect()->route('students.index');
     }
 
     public function destroy($id)
     {
-        $students = session('students', []);
-
-        $students = array_filter($students, function ($student) use ($id) {
-            return $student['id'] != $id;
-        });
-
-        session(['students' => array_values($students)]);
+        $student = Student::findOrFail($id);
+        $student->delete();
 
         return redirect()->route('students.index');
     }
