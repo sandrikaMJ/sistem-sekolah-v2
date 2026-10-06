@@ -1,11 +1,10 @@
 <?php
- 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
- 
-return new class extends Migration
-{
+
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,21 +12,24 @@ return new class extends Migration
     {
         Schema::table('students', function (Blueprint $table) {
             if (Schema::hasColumn('students', 'email')) {
-                $table->dropColumn('email');
+                $table->dropUnique('students_email_unique');
+                $table->string('email', 100)->change();
+                $table->unique('email');
             }
         });
     }
- 
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
         Schema::table('students', function (Blueprint $table) {
-            if (!Schema::hasColumn('students', 'email')) {
-                $table->string('email')->unique()->after('name');
+            if (Schema::hasColumn('students', 'email')) {
+                $table->dropUnique('students_email_unique');
+                $table->string('email', 255)->change();
+                $table->unique('email');
             }
         });
     }
 };
- 

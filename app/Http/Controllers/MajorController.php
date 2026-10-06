@@ -6,87 +6,102 @@ use Illuminate\Http\Request;
 
 class MajorController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
-{
-    $title = 'Sistem Sekolah - Daftar Jurusan';
-
-    $majors = session('majors', [
+    {
+        $majors = [
         [
             'id' => 1,
             'code' => 'AKL',
             'name' => 'Akuntansi dan Keuangan Lembaga',
-            'description' => 'Program keahlian akuntansi dan keuangan.',
+            'description' => 'Program keahlian yang membekali murid dengan kompetensi pencatatan dan pelaporan keuangan.',
         ],
         [
             'id' => 2,
             'code' => 'TKJ',
             'name' => 'Teknik Komputer dan Jaringan',
-            'description' => 'Program keahlian komputer dan jaringan.',
+            'description' => 'Program keahlian yang membekali murid dengan kompetensi instalasi, konfigurasi, dan pemeliharaan jaringan komputer.',
         ],
         [
             'id' => 3,
             'code' => 'BD',
             'name' => 'Bisnis Digital',
-            'description' => 'Program keahlian bisnis dan pemasaran digital.',
+            'description' => 'Program keahlian yang membekali murid dengan kompetensi pemasaran dan pengelolaan bisnis berbasis digital.',
         ],
-    ]);
+];
 
-    // Memastikan data lama yang tidak punya description tetap aman
-    foreach ($majors as &$major) {
-        $major['description'] = $major['description'] ?? '';
-    }
-
-    session()->put('majors', $majors);
-
-    return view('majors.index', [
-        'title' => $title,
-        'majors' => $majors,
-    ]);
-}
-
-    public function create()
-    {
-        $title = 'Sistem Sekolah - Tambah Jurusan';
-
-        return view('majors.create', [
-            'title' => $title,
+        return view('majors.index', [
+            'title' => 'Sistem Sekolah - Daftar Jurusan',
+            'majors' => $majors
         ]);
     }
 
-    public function store(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
-        $majors = session('majors', []);
-
-        $majors[] = [
-            'id' => count($majors) + 1,
-            'code' => $request->code,
-            'name' => $request->name,
-            'description' => $request->description,
-        ];
-
-        session()->put('majors', $majors);
-
-        return redirect()->route('majors.index');
+        $title = "Sistem Sekolah - Tambah Jurusan";
+        return view('majors.create', [
+            'title' => $title
+        ]);
     }
 
-    public function show($id)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
-        $majors = session('majors', []);
+        return "Menyimpan data jurusan baru";
+    }
 
-        $major = null;
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $title = "Sistem Sekolah - Detail Jurusan";
 
-        foreach ($majors as $item) {
-            if ($item['id'] == $id) {
-                $major = $item;
+        $majors = [
+            [
+                'id' => 1,
+                'code' => 'AKL',
+                'name' => 'Akuntansi dan Keuangan Lembaga',
+                'description' => 'Program keahlian yang membekali murid dengan kompetensi pencatatan dan pelaporan keuangan.',
+            ],
+            [
+                'id' => 2,
+                'code' => 'TKJ',
+                'name' => 'Teknik Komputer dan Jaringan',
+                'description' => 'Program keahlian yang membekali murid dengan kompetensi instalasi, konfigurasi, dan pemeliharaan jaringan komputer.',
+            ],
+            [
+                'id' => 3,
+                'code' => 'BD',
+                'name' => 'Bisnis Digital',
+                'description' => 'Program keahlian yang membekali murid dengan kompetensi pemasaran dan pengelolaan bisnis berbasis digital.',
+            ],
+        ];
+
+        $found = null;
+        foreach ($majors as $m) {
+            if ($m['id'] == $id) {
+                $found = $m;
                 break;
             }
         }
 
-        if (!$major) {
-            abort(404);
+        if (!$found) {
+            abort(404, 'Jurusan tidak ditemukan');
         }
 
-        $title = 'Sistem Sekolah - Detail Jurusan';
+        $major = (object)[
+            'code' => $found['code'],
+            'name' => $found['name'],
+            'description' => $found['description'],
+        ];
 
         return view('majors.show', [
             'title' => $title,
@@ -94,24 +109,51 @@ class MajorController extends Controller
         ]);
     }
 
-    public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
-        $majors = session('majors', []);
+        $title = "Sistem Sekolah - Edit Jurusan";
 
-        $major = null;
+        $majors = [
+            [
+                'id' => 1,
+                'code' => 'AKL',
+                'name' => 'Akuntansi dan Keuangan Lembaga',
+                'description' => 'Program keahlian yang membekali murid dengan kompetensi pencatatan dan pelaporan keuangan.',
+            ],
+            [
+                'id' => 2,
+                'code' => 'TKJ',
+                'name' => 'Teknik Komputer dan Jaringan',
+                'description' => 'Program keahlian yang membekali murid dengan kompetensi instalasi, konfigurasi, dan pemeliharaan jaringan komputer.',
+            ],
+            [
+                'id' => 3,
+                'code' => 'BD',
+                'name' => 'Bisnis Digital',
+                'description' => 'Program keahlian yang membekali murid dengan kompetensi pemasaran dan pengelolaan bisnis berbasis digital.',
+            ],
+        ];
 
-        foreach ($majors as $item) {
-            if ($item['id'] == $id) {
-                $major = $item;
+        $found = null;
+        foreach ($majors as $m) {
+            if ($m['id'] == $id) {
+                $found = $m;
                 break;
             }
         }
 
-        if (!$major) {
-            abort(404);
+        if (!$found) {
+            abort(404, 'Jurusan tidak ditemukan');
         }
 
-        $title = 'Sistem Sekolah - Edit Jurusan';
+        $major = (object)[
+            'code' => $found['code'],
+            'name' => $found['name'],
+            'description' => $found['description'],
+        ];
 
         return view('majors.edit', [
             'title' => $title,
@@ -119,33 +161,19 @@ class MajorController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
-        $majors = session('majors', []);
-
-        foreach ($majors as &$major) {
-            if ($major['id'] == $id) {
-                $major['code'] = $request->code;
-                $major['name'] = $request->name;
-                $major['description'] = $request->description;
-            }
-        }
-
-        session()->put('majors', $majors);
-
-        return redirect()->route('majors.index');
+        return "Memperbarui data jurusan dengan ID: {$id}";
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
-        $majors = session('majors', []);
-
-        $majors = array_values(array_filter($majors, function ($major) use ($id) {
-            return $major['id'] != $id;
-        }));
-
-        session()->put('majors', $majors);
-
-        return redirect()->route('majors.index');
+        return "Menghapus data jurusan dengan ID: {$id}";
     }
 }

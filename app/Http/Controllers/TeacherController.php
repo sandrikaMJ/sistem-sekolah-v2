@@ -6,95 +6,82 @@ use Illuminate\Http\Request;
 
 class TeacherController extends Controller
 {
-    private function getTeachers()
-    {
-        if (!session()->has('teachers')) {
-            session([
-                'teachers' => [
-                    [
-                        'id' => 1,
-                        'nip' => '198501012024',
-                        'name' => 'Budi Santoso',
-                        'gender' => 'Laki-Laki',
-                        'subject' => 'Akuntansi Dasar',
-                        'phone' => '081234560001',
-                        'status' => 'Aktif',
-                    ],
-                    [
-                        'id' => 2,
-                        'nip' => '198602022024',
-                        'name' => 'Siti Aminah',
-                        'gender' => 'Perempuan',
-                        'subject' => 'Bahasa Indonesia',
-                        'phone' => '081234560002',
-                        'status' => 'Aktif',
-                    ],
-                ],
-            ]);
-        }
-
-        return session('teachers', []);
-    }
-
     public function index()
     {
-        $title = 'Sistem Sekolah - Daftar Guru';
+        $teachers = [
+        [
+            'id' => 1,
+            'nip' => '198501012024',
+            'name' => 'Budi Santoso',
+            'gender' => 'Laki-Laki',
+            'subject' => 'Akuntansi Dasar',
+            'phone' => '081234560001',
+            'status' => 'Aktif',
+        ],
+        [
+            'id' => 2,
+            'nip' => '198703152024',
+            'name' => 'Siti Aminah',
+            'gender' => 'Perempuan',
+            'subject' => 'Jaringan Komputer',
+            'phone' => '081234560002',
+            'status' => 'Aktif',
+        ]
+];
 
         return view('teachers.index', [
-            'title' => $title,
-            'teachers' => $this->getTeachers(),
+            'title' => 'Sistem Sekolah - Daftar Guru',
+            'teachers' => $teachers
         ]);
-    }
-
-    public function create()
-    {
-        $title = 'Sistem Sekolah - Tambah Guru';
-
-        return view('teachers.create', [
-            'title' => $title,
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nip' => 'required',
-            'name' => 'required',
-            'gender' => 'required',
-            'subject' => 'required',
-            'phone' => 'required',
-            'status' => 'required',
-        ]);
-
-        $teachers = $this->getTeachers();
-
-        $newId = count($teachers) > 0
-            ? max(array_column($teachers, 'id')) + 1
-            : 1;
-
-        $teachers[] = [
-            'id' => $newId,
-            'nip' => $request->nip,
-            'name' => $request->name,
-            'gender' => $request->gender,
-            'subject' => $request->subject,
-            'phone' => $request->phone,
-            'status' => $request->status,
-        ];
-
-        session(['teachers' => $teachers]);
-
-        return redirect()->route('teachers.index');
     }
 
     public function show($id)
     {
-        $title = 'Sistem Sekolah - Detail Guru';
+        $title = "Sistem Sekolah - Detail Guru";
 
-        $teacher = collect($this->getTeachers())
-            ->firstWhere('id', (int) $id);
+        // Recreate teachers list (same structure as index) and find by id
+        $teachers = [
+            [
+                'id' => 1,
+                'nip' => '198501012024',
+                'name' => 'Budi Santoso',
+                'gender' => 'Laki-Laki',
+                'subject' => 'Akuntansi Dasar',
+                'phone' => '081234560001',
+                'status' => 'Aktif',
+            ],
+            [
+                'id' => 2,
+                'nip' => '198703152024',
+                'name' => 'Siti Aminah',
+                'gender' => 'Perempuan',
+                'subject' => 'Jaringan Komputer',
+                'phone' => '081234560002',
+                'status' => 'Aktif',
+            ]
+        ];
 
-        abort_if(!$teacher, 404);
+        $found = null;
+        foreach ($teachers as $t) {
+            if ($t['id'] == $id) {
+                $found = $t;
+                break;
+            }
+        }
+
+        if (!$found) {
+            abort(404, 'Guru tidak ditemukan');
+        }
+
+        // Normalize to object and normalized codes expected by the view
+        $teacher = (object)[
+            'nip' => $found['nip'],
+            'name' => $found['name'],
+            'gender' => ($found['gender'] === 'Laki-Laki' ? 'L' : ($found['gender'] === 'Perempuan' ? 'P' : $found['gender'])),
+            'subject' => $found['subject'],
+            'phone' => $found['phone'],
+            'status' => ($found['status'] === 'Aktif' ? 'yes' : 'no'),
+        ];
 
         return view('teachers.show', [
             'title' => $title,
@@ -102,14 +89,65 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $title = "Sistem Sekolah - Tambah Guru";
+        return view('teachers.create', [
+            'title' => $title
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        return "Menyimpan data guru baru";
+    }
+
     public function edit($id)
     {
-        $title = 'Sistem Sekolah - Edit Guru';
+        $title = "Sistem Sekolah - Edit Guru";
 
-        $teacher = collect($this->getTeachers())
-            ->firstWhere('id', (int) $id);
+        // Recreate teachers list and find by id
+        $teachers = [
+            [
+                'id' => 1,
+                'nip' => '198501012024',
+                'name' => 'Budi Santoso',
+                'gender' => 'Laki-Laki',
+                'subject' => 'Akuntansi Dasar',
+                'phone' => '081234560001',
+                'status' => 'Aktif',
+            ],
+            [
+                'id' => 2,
+                'nip' => '198703152024',
+                'name' => 'Siti Aminah',
+                'gender' => 'Perempuan',
+                'subject' => 'Jaringan Komputer',
+                'phone' => '081234560002',
+                'status' => 'Aktif',
+            ]
+        ];
 
-        abort_if(!$teacher, 404);
+        $found = null;
+        foreach ($teachers as $t) {
+            if ($t['id'] == $id) {
+                $found = $t;
+                break;
+            }
+        }
+
+        if (!$found) {
+            abort(404, 'Guru tidak ditemukan');
+        }
+
+        $teacher = (object)[
+            'nip' => $found['nip'],
+            'name' => $found['name'],
+            'gender' => ($found['gender'] === 'Laki-Laki' ? 'L' : ($found['gender'] === 'Perempuan' ? 'P' : $found['gender'])),
+            'subject' => $found['subject'],
+            'phone' => $found['phone'],
+            'status' => ($found['status'] === 'Aktif' ? 'yes' : 'no'),
+        ];
 
         return view('teachers.edit', [
             'title' => $title,
@@ -119,43 +157,11 @@ class TeacherController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nip' => 'required',
-            'name' => 'required',
-            'gender' => 'required',
-            'subject' => 'required',
-            'phone' => 'required',
-            'status' => 'required',
-        ]);
-
-        $teachers = $this->getTeachers();
-
-        foreach ($teachers as &$teacher) {
-            if ($teacher['id'] == $id) {
-                $teacher['nip'] = $request->nip;
-                $teacher['name'] = $request->name;
-                $teacher['gender'] = $request->gender;
-                $teacher['subject'] = $request->subject;
-                $teacher['phone'] = $request->phone;
-                $teacher['status'] = $request->status;
-            }
-        }
-
-        session(['teachers' => $teachers]);
-
-        return redirect()->route('teachers.index');
+        return "Memperbarui data guru dengan ID: {$id}";
     }
 
     public function destroy($id)
     {
-        $teachers = $this->getTeachers();
-
-        $teachers = array_filter($teachers, function ($teacher) use ($id) {
-            return $teacher['id'] != $id;
-        });
-
-        session(['teachers' => array_values($teachers)]);
-
-        return redirect()->route('teachers.index');
+        return "Menghapus data guru dengan ID: {$id}";
     }
 }
